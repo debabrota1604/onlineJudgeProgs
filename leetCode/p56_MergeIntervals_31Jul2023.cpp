@@ -3,7 +3,8 @@ using namespace std;
 
 
 class Solution {
-public:
+public: 
+    //Not required, by default this comparison is implemented
     static bool comparator(vector<int> p1, vector<int> p2){
         return p1[0] < p2[0];
     }
@@ -20,41 +21,22 @@ public:
         cout << "]\n";
     }
     vector<vector<int>> merge(vector<vector<int>>& intervals) {
-        
-        //Step1: Sort the intervals based on starting indices
-        sort(intervals.begin(), intervals.end(), comparator);
-        
-        vector<vector<int>> res;
-        int iter=0, iter2=0;
-        
-        //Step2: Run two loops to compare two intervals
-        while(iter < intervals.size()){
-            
-            vector<int> temp = intervals[iter];
-            iter2 = iter+1;
-            
-            while(iter2 < intervals.size()){
 
-                if(intervals[iter2][1] <= temp[1]){
-                    
-                }
-                
-                // If start of second interval is greater than finish time of first interval, they cannot be merged. 
-                if(intervals[iter2][0] > temp[1]){
-                    res.emplace_back(temp);
-                    iter = iter2;
-                    break;
-                }
-                // Else extend the present interval's finish time to include second interval
-                temp[1] = max(temp[1], intervals[iter2][1]);
-                iter2++;
+        //first, sort the intervals in ascending order of start index
+        sort(intervals.begin(), intervals.end());
+
+        // Step2: prepare the result vector
+        vector<vector<int>> res; 
+        res.emplace_back(intervals[0]);
+
+        // Step3: For each subsequent indices, either merge the interval, or push new interval
+        for(int it=1; it<intervals.size(); it++){
+            int lastIndex = res.size()-1;
+            if(res[lastIndex][1] >= intervals[it][0]){ // merge case, calculate the interval end
+                res[lastIndex][1] = res[lastIndex][1] > intervals[it][1] ? res[lastIndex][1] : intervals[it][1];
             }
-            if(iter2 == intervals.size()){
-                res.emplace_back(temp);
-                iter++;
-            }
+            else res.emplace_back(intervals[it]); // push new interval case
         }
-        
         return res;
     }
 };
