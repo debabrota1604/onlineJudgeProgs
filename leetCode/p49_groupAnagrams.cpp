@@ -24,40 +24,24 @@ Output: [["a"]]
 
 
 */
-
 class Solution {
 public:
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
-        
-       vector<vector<string>>ans;
-        
-       unordered_map<string, vector<string>>mp;
-        
-         /*
-                Consider example 1 : strs = ["eat","tea","tan","ate","nat","bat"]
-                
-                After the below opeartion of for loop map will contain
-                
-                aet -- eat, tea, ate
-                ant -- tan, nat
-                abt -- bat
-        */
-        
-        for(int i = 0 ; i < strs.size() ; i++)
-        {
-            string s = strs[i];
-            sort(strs[i].begin(),strs[i].end());
-            mp[strs[i]].push_back(s);
-        }
-        
-        //now simply put the elements  of second column of map in ans
-        
-        for(auto i : mp)
-        {
-            ans.push_back(i.second);
+        // Step 1: Use map to store words per pattern
+        unordered_map<string, vector<string>> anagrams;
+
+        // Step 2: Use sorted str as key and value is vector of input strings matching the key
+        for(auto str:strs){
+            string sorted = str;
+            sort(sorted.begin(), sorted.end());
+            anagrams[sorted].emplace_back(str);
         }
 
-        return ans;
-        
+        // Step 3: Output the array with only the values vector inside a vector
+        vector<vector<string>> res;
+        for(auto anagram:anagrams){
+            res.emplace_back(anagram.second);
+        }
+        return res;
     }
 };
